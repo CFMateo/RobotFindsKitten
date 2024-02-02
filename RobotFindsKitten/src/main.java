@@ -1,4 +1,5 @@
 
 public class main {
-	int test = 2;
+	int test = 1;
+	int test2 = 2;
 }
