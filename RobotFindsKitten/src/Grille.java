@@ -1,40 +1,54 @@
 public class Grille {
-    private Case[][] grille;
+	 private char[][] grille;
+	  
+	 public Grille(int hauteur, int largeur, int repetitions) {
+	        grille = new char[13][65];
+	        
+	        for (int i = 0; i < 13; i++) {
+	            for (int j = 0; j < 65; j++) {
+	            	 if (i == 0 || j ==0 || i%6 == 0 || (j+1)%13 == 0) {
+		        		  grille[i][j] = '%';
+		        		  }else {
+		                        grille[i][j] = ' ';
+		        		  }
+	           
+		        	  }			
+	            }
+	        // Remplacement des caractères spéciaux
+	        for (int i = 0; i < 13; i++) {
+	            for (int j = 0; j < 65; j++) {
+	                if (((i==3 || i==9)&& j>0  && j % 13 == 0)|| i==6 && (j-6)%13==0) {
+	                    grille[i][j-1] = '!';
+	                }
+	            }
+	        }
+	    }
+	
+	
+	    
 
-    public Grille(int nbrPiecesX, int nbrPiecesY, int largeurPiece, int hauteurPiece, int nbrNonKitten) {
-        // Initialisation de la grille avec les dimensions spécifiées
-        grille = new Case[nbrPiecesY][nbrPiecesX];
+	    // Méthode pour afficher la grille
+	    public void afficherGrille() {
+	        for (int i = 0; i < 13; i++) {
+	            for (int j = 0; j < 65; j++) {
+	                System.out.print(grille[i][j]);
+	            }
+	            System.out.println(); // Pour passer à la ligne suivante après avoir affiché chaque ligne
+	        }
+	    }
 
-        // Boucle pour remplir la grille avec des cases vides ou des éléments non-chatons
-        for (int y = 0; y < nbrPiecesY; y++) {
-            for (int x = 0; x < nbrPiecesX; x++) {
-                // Vous pouvez mettre en place la logique pour décider quel type de case placer à chaque position
-                if (Math.random() < (double) nbrNonKitten / (nbrPiecesX * nbrPiecesY)) {
-                    // Place un élément non-chaton à cette position
-                    grille[y][x] = new NonKitten();
-                } else {
-                    // Place une case vide à cette position
-                    grille[y][x] = new CaseVide();
-                }
-            }
-        }
 
-        // Placez d'autres éléments comme les murs, la porte, etc., si nécessaire
+    public boolean deplacementPossible(Robot robot, int x, int y) {
+        // Implémentez la méthode pour vérifier si le déplacement du robot à la position (x, y) est possible
+        return false;
     }
 
-    // Autres méthodes de la classe Grille...
+    public void interagir(Robot robot) {
+        // Implémentez la méthode pour interagir entre le robot et la case sur laquelle il se trouve
+    }
 
-    // Exemple de méthode pour afficher la grille
-    public void afficher(Robot robot) {
-        for (int y = 0; y < grille.length; y++) {
-            for (int x = 0; x < grille[y].length; x++) {
-                if (robot.getPosition().egal(x, y)) {
-                    System.out.print("R "); // Affiche le robot
-                } else {
-                    System.out.print(grille[y][x].getRepresentation() + " "); // Affiche la représentation de la case
-                }
-            }
-            System.out.println(); // Saut de ligne pour afficher la prochaine ligne de la grille
-        }
+    public Point randomEmptyCell() {
+        // Implémentez la méthode pour renvoyer une cellule vide aléatoire sur la grille
+        return null;
     }
 }
