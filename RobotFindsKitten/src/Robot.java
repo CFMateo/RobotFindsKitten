@@ -6,12 +6,14 @@ public class Robot {
         this.nom = nom;
         this.position = position;
     }
-
+    
     public Point getPosition() {
         return position;
     }
-
-    public void deplacer(String direction) {
-        // Implémentez la logique pour déplacer le robot dans une direction donnée
+    
+    public void setPosition(Point newPosition) {
+        this.position = newPosition;
     }
+
+
 }

@@ -1,14 +1,61 @@
+import java.util.Scanner;
+
 public class RobotFindsKitten {
     public static void main(String[] args) {
+    	
     	// Création d'une instance de Grille avec une certaine hauteur et largeur
-       
-        Grille grille = new Grille(7, 14, 5); // Création de la grille avec une hauteur de 7 lignes, une largeur de 14 caractères, et 2 répétitions
-        grille.afficherGrille(); // Affichage de la grille
- 
+        Grille grille = new Grille(13, 61); // Création de la grille avec une hauteur de 7 et une largeur de 14 caractères
+         
+        int[] coordonneesRobot = grille.placerRobot(-1,-1);
+        
+        // Récupération des coordonnées i et j retournées par la méthode placerRobotAleatoirement()
+        int x = coordonneesRobot[0];
+        int y = coordonneesRobot[1];
+        
+        // Création d'un objet Point pour définir la position initiale du robot
+        Point positionInitiale = new Point(x, y);
+
+        // Instanciation d'un objet Robot en utilisant le constructeur avec la position initiale
+        Robot robot = new Robot("Le bg", positionInitiale);
+
+               
+        grille.genererNonKittens();
+   
+        // Affichage de la grille après avoir placé le robot
+        grille.afficherGrille();
 
         
-    }
+    
+        // Création d'un scanner pour lire l'entrée de l'utilisateur depuis la console
+        Scanner scanner = new Scanner(System.in);
+
+        // Boucle principale
+        while (true) {
+        	Point positionRobot = robot.getPosition();
+        	
+            // Lire la commande de déplacement de l'utilisateur
+            System.out.println("Entrez une commande de déplacement (w, a, s, d) ou HAHA pour quitter : ");
+            String commande = scanner.nextLine();
+
+            // Vérifier si l'utilisateur souhaite quitter le jeu
+            if (commande.equals("HAHA")) {
+                System.out.println("Jeu terminé. Au revoir !");
+                break; // Sortir de la boucle et terminer le programme
+            }
+
+            // Déplacer le robot en fonction de la commande entrée par l'utilisateur
+            grille.deplacerRobot(commande, robot);
+
+            // Afficher la grille mise à jour après le déplacement du robot
+            grille.afficherGrille();
+        }
+
+        // Fermer le scanner une fois que l'utilisateur a terminé
+        scanner.close();
+
+    }   
+}
     
 
-}
+
 

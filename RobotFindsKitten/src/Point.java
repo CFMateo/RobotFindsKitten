@@ -1,6 +1,7 @@
 public class Point {
     //ATTRIBUTS
-    private final int x, y;
+    final int x;
+	final int y;
     //CONSTRUCTEUR
     public Point(int x, int y) {
         this.x = x;
