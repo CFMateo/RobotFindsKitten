@@ -20,7 +20,7 @@ public class RobotFindsKitten {
 
                
         grille.genererNonKittens();
-   
+        System.out.println("           Bienvenue dans RobotFindsKitten\nSuper Dungeon Master 3000 Ultra Turbo Edition !");
         // Affichage de la grille après avoir placé le robot
         grille.afficherGrille();
 
@@ -28,13 +28,16 @@ public class RobotFindsKitten {
     
         // Création d'un scanner pour lire l'entrée de l'utilisateur depuis la console
         Scanner scanner = new Scanner(System.in);
-
+        
+      
+        
         // Boucle principale
         while (true) {
         	Point positionRobot = robot.getPosition();
         	
+            grille.afficherPrompt(robot);
+            
             // Lire la commande de déplacement de l'utilisateur
-            System.out.println("Entrez une commande de déplacement (w, a, s, d) ou HAHA pour quitter : ");
             String commande = scanner.nextLine();
 
             // Vérifier si l'utilisateur souhaite quitter le jeu
@@ -48,6 +51,7 @@ public class RobotFindsKitten {
 
             // Afficher la grille mise à jour après le déplacement du robot
             grille.afficherGrille();
+            
         }
 
         // Fermer le scanner une fois que l'utilisateur a terminé

@@ -1,5 +1,5 @@
 public class Robot {
-    private String nom;
+    String nom;
     private Point position;
 
     public Robot(String nom, Point position) {

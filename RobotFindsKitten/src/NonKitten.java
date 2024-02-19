@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class NonKitten extends Case {
     private String descriptive;
     private int nextDescription = -1;
@@ -409,9 +412,14 @@ public class NonKitten extends Case {
             "It's an inverted billiard ball!",
             "The spectre of Sherlock Holmes wills you onwards."
     };
+    // Liste pour stocker les symboles
+    private static List<Character> symbolList = new ArrayList<>();
 
     public NonKitten(){
         super.representation = getRandomSymbole();
+        
+        // Ajouter le nouveau symbole à la liste
+        symbolList.add(super.representation);
 
         if(nextDescription == descriptions.length) {
             nextDescription = 0;
@@ -420,10 +428,17 @@ public class NonKitten extends Case {
             nextDescription++;
         }
         this.descriptive = descriptions[nextDescription];
+        
     }
     public String getDescriptive(){
         return this.descriptive;
     }
+    public static String getDescriptionFromSymbol(char symbol) {
+    	int index = symbolList.indexOf(symbol);
+    	return descriptions[index];
+    	
+    }
+
 
     @Override
     //The robot is always able to interact with an NonKitten item

@@ -1,13 +1,18 @@
+
 import java.util.Random;
 
 public class Grille {
 	 private char[][] grille;
 	 boolean boolAncienKitten = false;
+	 
 	 // Stocker la valeur de la case précédente
 	 char ancienneValeur = ' ';
 	 
+	 int nombreCles = 0;
+	 
+	 
 	 public Grille(int hauteur, int largeur) {
-	        grille = new char[hauteur][largeur];
+	     grille = new char[hauteur][largeur];
 	      
 	        // Structure basique de la grille:
 	        for (int i = 0; i < hauteur; i++) {
@@ -36,6 +41,16 @@ public class Grille {
 	        
 	    }
 	 
+	// On affiche la grille 2D:
+		 public void afficherGrille() {
+			    for (int i = 0; i < grille.length; i++) {
+			        for (int j = 0; j < grille[i].length; j++) {
+			            System.out.print(grille[i][j]);
+			        }
+			        System.out.println();
+			    }
+			}
+	 
 	 public Point randomEmptyCell() {
 		    Random random = new Random();
 		    int hauteur = grille.length;
@@ -49,59 +64,8 @@ public class Grille {
 
 		    return new Point(x, y);
 		}
-	 public boolean deplacementPossible(int x, int y) {
-		    // Vérifier si les coordonnées sont valides
-		    if (x < 0 || y < 0 || x >= grille.length || y >= grille[0].length) {
-		        return false; // Les coordonnées sont en dehors des limites de la grille
-		    }
-		    
-		    // Vérifier si la cellule est vide ou non
-		    if (grille[x][y] == '%' || grille[x][y] == '!') {
-		        return false ; // La cellule n'est pas vide, le déplacement n'est pas possible
-		    }
-		    
-		    // Vérifier si le déplacement est possible par rapport aux règles du jeu (ex: murs, objets)
-		    // Ajoutez vos conditions spécifiques ici
-		    
-		    // Le déplacement est possible si toutes les conditions sont satisfaites
-		    return true;
-		}
-
 	 
-	 public int[] placerRobot(int x, int y) {
-		    if (x != -1 && y != -1) {
-		        // Si les coordonnées x et y sont fournies, placer le robot à ces coordonnées
-		        if (grille[x][y] == ' ') {
-		            grille[x][y] = '#';
-		            return new int[] {x, y};
-		        } else {
-		            System.out.println("Impossible de placer le robot à la position spécifiée.");
-		            return new int[] {-1, -1}; // Retourner un tableau d'entiers invalides
-		        }
-		    } else {
-		        // Si les coordonnées ne sont pas fournies, placer le robot aléatoirement
-		    	 Point positionAleatoire = randomEmptyCell(); 
-		         int xAleatoire = positionAleatoire.getX();
-		         int yAleatoire = positionAleatoire.getY();
-		         
-		        // Place le robot à la position aléatoire trouvée
-		        grille[xAleatoire][yAleatoire] = '#';
-
-		        // Retourne les coordonnées finales
-		        return new int[] {xAleatoire, yAleatoire};
-		    }
-	 }
-	
-	 
-	// On affiche la grille 2D:
-	 public void afficherGrille() {
-		    for (int i = 0; i < grille.length; i++) {
-		        for (int j = 0; j < grille[i].length; j++) {
-		            System.out.print(grille[i][j]);
-		        }
-		        System.out.println();
-		    }
-		}
+		
 	 public void deplacerRobot(String commande, Robot robot) {
 		    int ancienX = robot.getPosition().getX();
 		    int ancienY = robot.getPosition().getY();
@@ -139,13 +103,19 @@ public class Grille {
 
 		    	if (boolAncienKitten){
 		    		grille[ancienX][ancienY] = ancienneValeur;
-			        System.out.println(ancienneValeur+"hahahahahha");
+			        
 		    	}
 		        
-		    	if (grille[newX][newY] != ' ' && grille[newX][newY] != '\''  && grille[newX][newY] != 'T'){
-		    		System.out.println(grille[newX][newY]+"hahishishihsa");
+		    	if (grille[newX][newY] != ' ' && grille[newX][newY] != '\''  && grille[newX][newY] != 'T'  && grille[newX][newY] != '!'){
+		    		String description = NonKitten.getDescriptionFromSymbol(grille[newX][newY]);
+		    		System.out.println(description);
 	        		ancienneValeur =  grille[newX][newY]; 
-	        		boolAncienKitten = true;		
+	        		boolAncienKitten = true;	
+		    	}else if (grille[newX][newY] == '\''){
+		    		nombreCles +=1;
+		    	}else if (grille[newX][newY] == '!'){
+		    		nombreCles -=1;
+		    		
 		    	}else {
 				    boolAncienKitten = false;	
 				    
@@ -161,26 +131,74 @@ public class Grille {
 		    }
 		    }
 	 
-		
-	 public void ajouterTeleporteurs() {
+	 
+	 
+	 public boolean deplacementPossible(int x, int y) {
+		    // Vérifier si les coordonnées sont valides
+		    if (x < 0 || y < 0 || x >= grille.length || y >= grille[0].length) {
+		        return false; // Les coordonnées sont en dehors des limites de la grille
+		    }
+		    
+		    // Vérifier si la cellule est vide ou non
+		    if (grille[x][y] == '%') {
+		        return false ; // La cellule n'est pas vide, le déplacement n'est pas possible
+		    }else if (grille[x][y] == '!') {
+		    	if (nombreCles>0) {
+		    		return true;
+		    	}else {
+		    		return false;
+		    	}
+		    	
+		    }
+		    
+		    // Le déplacement est possible si toutes les conditions sont satisfaites
+		    return true;
+		}
+
+	 
+	 public int[] placerRobot(int x, int y) {
+		    if (x != -1 && y != -1) {
+		        // Si les coordonnées x et y sont fournies, placer le robot à ces coordonnées
+		        if (grille[x][y] == ' ') {
+		            grille[x][y] = '#';
+		            return new int[] {x, y};
+		        } else {
+		            System.out.println("Impossible de placer le robot à la position spécifiée.");
+		            return new int[] {-1, -1}; // Retourner un tableau d'entiers invalides
+		        }
+		    } else {
+		        // Si les coordonnées ne sont pas fournies, placer le robot aléatoirement
+		    	 Point positionAleatoire = randomEmptyCell(); 
+		         int xAleatoire = positionAleatoire.getX();
+		         int yAleatoire = positionAleatoire.getY();
+		         
+		        // Place le robot à la position aléatoire trouvée
+		        grille[xAleatoire][yAleatoire] = '#';
+
+		        // Retourne les coordonnées finales
+		        return new int[] {xAleatoire, yAleatoire};
+		    }
+	 }
+	
+	
+	public void ajouterTeleporteurs() {
 		    Random random = new Random();
 		    int hauteur = grille.length;
 		    int largeur = grille[0].length;
 		    int nombreTeleporteurs = 0;
 
-		    // Tant que le nombre de téléporteurs ajoutés est inférieur à 2
-		    while (nombreTeleporteurs < 2) {
-		        // Trouver une cellule vide aléatoire
-		        Point position = randomEmptyCell();
-		        int x = position.getX();
-		        int y = position.getY();
+		   
+		    // Trouver une cellule vide aléatoire
+		    Point position = randomEmptyCell();
+		    int x = position.getX();
+		    int y = position.getY();
 
-		        // Vérifier si la case est vide
-		        if (grille[x][y] == ' ') {
-		            // Placer un téléporteur à cet emplacement
-		            grille[x][y] = 'T';
-		            nombreTeleporteurs++;
-		        }
+		    // Vérifier si la case est vide
+		    if (grille[x][y] == ' ') {
+		    // Placer un téléporteur à cet emplacement
+		    grille[x][y] = 'T';
+		    nombreTeleporteurs++;
+		        
 		    }
 		}
 	 
@@ -211,7 +229,6 @@ public class Grille {
 		}
 	 
 	 public void genererNonKittens() {
-		    Random random = new Random();
 		    int hauteur = grille.length;
 		    int largeur = grille[0].length;
 		    
@@ -224,7 +241,7 @@ public class Grille {
 		    int nombreTotalCases = hauteur * largeur;
 
 		    // Calculer le nombre de NonKittens à générer (par exemple, 10% du nombre total de cases)
-		    int nombreNonKittens = (int) (nombreTotalCases * 0.06	);
+		    int nombreNonKittens = (int) (nombreTotalCases * 0.06);
 
 		    for (int i = 0; i < nombreNonKittens; i++) {
 		        // Trouver une cellule vide aléatoire pour placer un NonKitten
@@ -234,16 +251,20 @@ public class Grille {
 		        int x = position.getX();
 		        int y = position.getY();
 		        if (grille[x][y] == ' ') {
-		            // Générer un symbole aléatoire pour le NonKitten
-		            char symbole = Case.getRandomSymbole();
-
-		            // Placer le NonKitten sur la grille
-		            grille[x][y] = symbole;
+		        	 // Créer une nouvelle instance de NonKitten
+		            NonKitten nonKitten = new NonKitten();
+		      
+		            // Placer le symbole du NonKitten sur la grille
+		            grille[x][y] = nonKitten.getRepresentation();;
 		    }
 		  }
 		}
 	 
-
+	 public void afficherPrompt(Robot robot) {
+		 System.out.println(robot.nom + " [" + nombreCles + "]>");
+		}
+		 
+	 
 	 
 	 
 
