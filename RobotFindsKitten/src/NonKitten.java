@@ -447,13 +447,4 @@ public class NonKitten extends Case {
         }
     }
 
-
-    @Override
-    //The robot is always able to interact with an NonKitten item
-    public Boolean interactionPossible(Robot robot){
-        return true;
-    }
-
-    @Override
-    public void interagir(Robot robot){}
 }

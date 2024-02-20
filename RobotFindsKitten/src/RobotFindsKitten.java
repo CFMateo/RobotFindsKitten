@@ -1,66 +1,54 @@
+
 import java.util.Scanner;
 
-public class RobotFindsKitten {
-    public static void main(String[] args) {
-    	
-    	// Création d'une instance de Grille avec une certaine hauteur et largeur
-        Grille grille = new Grille(13, 61); // Création de la grille avec une hauteur de 7 et une largeur de 14 caractères
-         
-        int[] coordonneesRobot = grille.placerRobot(-1,-1);
-        
-        // Récupération des coordonnées i et j retournées par la méthode placerRobotAleatoirement()
-        int x = coordonneesRobot[0];
-        int y = coordonneesRobot[1];
-        
-        // Création d'un objet Point pour définir la position initiale du robot
-        Point positionInitiale = new Point(x, y);
 
-        // Instanciation d'un objet Robot en utilisant le constructeur avec la position initiale
+public class RobotFindsKitten {
+    
+    // Méthode principale
+    public static void main(String[] args) {
+        // Définition des constantes pour la taille de la grille
+        final int HAUTEUR_GRILLE = 13;
+        final int LARGEUR_GRILLE = 61;
+
+        // Création d'une instance de Grille avec la taille spécifiée
+        Grille grille = new Grille(HAUTEUR_GRILLE, LARGEUR_GRILLE);
+
+        // Placement du robot à une position aléatoire sur la grille
+        int[] coordonneesRobot = grille.placerRobot(-1, -1);
+        int positionX = coordonneesRobot[0];
+        int positionY = coordonneesRobot[1];
+        Point positionInitiale = new Point(positionX, positionY);
         Robot robot = new Robot("R.O.B.", positionInitiale);
 
-               
-        grille.genererObjet();
-        System.out.println("           Bienvenue dans RobotFindsKitten\nSuper Dungeon Master 3000 Ultra Turbo Edition !");
-        // Affichage de la grille après avoir placé le robot
-        grille.afficherGrille();
+        // Génération des objets (clés, téléporteurs, et le kitten)
+        grille.genererObjets();
 
-        
-    
+ 
+        System.out.println("           Bienvenue dans RobotFindsKitten\nSuper Dungeon Master 3000 Ultra Turbo Edition !");
+
         // Création d'un scanner pour lire l'entrée de l'utilisateur depuis la console
         Scanner scanner = new Scanner(System.in);
-        
-      
-        
-        // Boucle principale
+
+        // Boucle principale du jeu
         while (!grille.isKittenTrouve()) {
-        	
+        	grille.afficherGrille();
+      
             grille.afficherPrompt(robot);
             
-            // Lire la commande de déplacement de l'utilisateur
+            // Lecture de la commande de déplacement entrée par l'utilisateur
             String commande = scanner.nextLine();
 
-            // Vérifier si l'utilisateur souhaite quitter le jeu
+            // Vérification si l'utilisateur souhaite quitter le jeu
             if (commande.equals("q")) {
                 System.out.println(" Au revoir !");
-                break; // Sortir de la boucle et terminer le programme
+                break; // Sortie de la boucle principale si l'utilisateur quitte le jeu
             }
-            
-            // Déplacer le robot en fonction de la commande entrée par l'utilisateur
+
+            // Déplacement du robot selon la commande entrée par l'utilisateur
             grille.deplacerRobot(commande, robot);
-            
-            if (!grille.isKittenTrouve()) {
-	            // Afficher la grille mise à jour après le déplacement du robot
-	            grille.afficherGrille();
-            }
+
             
         }
-
-        // Fermer le scanner une fois que l'utilisateur a terminé
         scanner.close();
-
-    }   
+    }
 }
-    
-
-
-
