@@ -434,9 +434,17 @@ public class NonKitten extends Case {
         return this.descriptive;
     }
     public static String getDescriptionFromSymbol(char symbol) {
-    	int index = symbolList.indexOf(symbol);
-    	return descriptions[index];
-    	
+    	// Trouver l'index du symbole dans la liste
+        int index = symbolList.indexOf(symbol);
+
+        // Vérifier si le symbole existe dans la liste
+        if (index != -1) {
+            // Retourner la description correspondante à l'index trouvé
+            return descriptions[index];
+        } else {
+            // Si le symbole n'est pas trouvé, retourner null ou une chaîne vide, selon vos besoins
+            return ""; // ou return null;
+        }
     }
 
 

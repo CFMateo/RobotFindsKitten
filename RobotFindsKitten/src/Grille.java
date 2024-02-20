@@ -3,14 +3,26 @@ import java.util.Random;
 
 public class Grille {
 	 private char[][] grille;
+	 
+	 boolean kittenTrouve = false;
+	 private char kittenSymbol = Case.getRandomSymbole();
+	 
+     
+	 
 	 boolean boolAncienKitten = false;
+	 
+	 String nomRobot = "nom du robot";
 	 
 	 // Stocker la valeur de la case précédente
 	 char ancienneValeur = ' ';
 	 
 	 int nombreCles = 0;
+	 int nombreTeleporteur = 0;
 	 
+	 boolean possedeTeleporteur = false;
 	 
+	
+
 	 public Grille(int hauteur, int largeur) {
 	     grille = new char[hauteur][largeur];
 	      
@@ -37,9 +49,13 @@ public class Grille {
 	                    grille[i][j] = '!';
 	                }
 	            }
+	            
 	        }
 	        
+	        
+	        
 	    }
+	 
 	 
 	// On affiche la grille 2D:
 		 public void afficherGrille() {
@@ -64,6 +80,7 @@ public class Grille {
 
 		    return new Point(x, y);
 		}
+	
 	 
 		
 	 public void deplacerRobot(String commande, Robot robot) {
@@ -87,10 +104,19 @@ public class Grille {
 		        case "d": // Droite
 		            newY += 1;
 		            break;
+		        case "t": // Haut
+		            if (possedeTeleporteur){
+		            	teleporter(ancienX,ancienY,robot);
+		            	return;
+		            }
+		            break;
 		        default:
 		            System.out.println("Commande invalide.");
 		            return; // Sortir de la méthode si la commande est invalide
 		    }
+		    
+		    
+		    
 
 		    // Vérifier si le déplacement est possible
 		    if (deplacementPossible(newX, newY)) {
@@ -105,8 +131,14 @@ public class Grille {
 		    		grille[ancienX][ancienY] = ancienneValeur;
 			        
 		    	}
-		        
-		    	if (grille[newX][newY] != ' ' && grille[newX][newY] != '\''  && grille[newX][newY] != 'T'  && grille[newX][newY] != '!'){
+		    
+		        if (grille[newX][newY] == kittenSymbol) {
+		        	System.out.println("You found kitten! Way to go, robot.\nKitten <3 " + nomRobot);
+		        	kittenTrouve = true;
+		        	isKittenTrouve();
+		        	
+		        	
+		        }else if (grille[newX][newY] != ' ' && grille[newX][newY] != '\''  && grille[newX][newY] != 'T'  && grille[newX][newY] != '!'){
 		    		String description = NonKitten.getDescriptionFromSymbol(grille[newX][newY]);
 		    		System.out.println(description);
 	        		ancienneValeur =  grille[newX][newY]; 
@@ -115,7 +147,8 @@ public class Grille {
 		    		nombreCles +=1;
 		    	}else if (grille[newX][newY] == '!'){
 		    		nombreCles -=1;
-		    		
+		    	}else if (grille[newX][newY] == 'T' && nombreTeleporteur==1){
+		    		possedeTeleporteur = true;
 		    	}else {
 				    boolAncienKitten = false;	
 				    
@@ -182,25 +215,40 @@ public class Grille {
 	
 	
 	public void ajouterTeleporteurs() {
-		    Random random = new Random();
-		    int hauteur = grille.length;
-		    int largeur = grille[0].length;
-		    int nombreTeleporteurs = 0;
-
 		   
 		    // Trouver une cellule vide aléatoire
 		    Point position = randomEmptyCell();
 		    int x = position.getX();
 		    int y = position.getY();
-
-		    // Vérifier si la case est vide
-		    if (grille[x][y] == ' ') {
-		    // Placer un téléporteur à cet emplacement
 		    grille[x][y] = 'T';
-		    nombreTeleporteurs++;
+		    nombreTeleporteur++;
 		        
-		    }
+		    
 		}
+	
+	public void teleporter(int ancienX, int ancienY, Robot robot) {
+	    // Obtenir les coordonnées aléatoires pour la nouvelle position
+	    int[] positionAleatoire = placerRobot(-1, -1);
+	    int newX = positionAleatoire[0];
+	    int newY = positionAleatoire[1];
+	    
+	    // Créer un nouveau point avec les nouvelles coordonnées
+        Point newPosition = new Point(newX, newY);
+	    
+	    System.out.println("Ancienne valeur : " + ancienneValeur);
+	    System.out.println("Nouvelle valeur : " + grille[newX][newY]);
+	    if (boolAncienKitten) {
+	    	grille[ancienX][ancienY] = ancienneValeur;
+	    	boolAncienKitten = false;	
+	    	
+	    }else {
+	    	grille[ancienX][ancienY] = ' ';
+	    }
+	    robot.setPosition(newPosition);
+	   
+	}
+
+	
 	 
 	 public void insererCles() {
 		 Random random = new Random();
@@ -228,20 +276,19 @@ public class Grille {
 		    }
 		}
 	 
-	 public void genererNonKittens() {
+	 public void genererObjet() {
 		    int hauteur = grille.length;
 		    int largeur = grille[0].length;
 		    
 		    insererCles();
 		    ajouterTeleporteurs();
-		  
+		    genererKitten();
 		    
-
 		    // Nombre total de cases dans la grille
 		    int nombreTotalCases = hauteur * largeur;
 
 		    // Calculer le nombre de NonKittens à générer (par exemple, 10% du nombre total de cases)
-		    int nombreNonKittens = (int) (nombreTotalCases * 0.06);
+		    int nombreNonKittens = (int) (nombreTotalCases * 0.05);
 
 		    for (int i = 0; i < nombreNonKittens; i++) {
 		        // Trouver une cellule vide aléatoire pour placer un NonKitten
@@ -261,11 +308,30 @@ public class Grille {
 		}
 	 
 	 public void afficherPrompt(Robot robot) {
-		 System.out.println(robot.nom + " [" + nombreCles + "]>");
+		 nomRobot = robot.nom;
+		 if (possedeTeleporteur) {
+			 System.out.println(robot.nom + " [" + nombreCles + "]T>");
+			 
+		}else {
+			System.out.println(robot.nom + " [" + nombreCles + "]>");
 		}
-		 
+	 }
 	 
+	 public void genererKitten() {
+	     // Utilisation de la variable globale kittenSymbol
+		 Point positionKitten = randomEmptyCell();
+	     int xKitten = positionKitten.getX();
+	     int yKitten = positionKitten.getY();
+		 grille[xKitten][yKitten] = kittenSymbol;
+	     System.out.println("Symbole Kitten: " + kittenSymbol + ", Position: (" + xKitten + ", " + yKitten + ")");
+	    }
+	
 	 
+	 public boolean isKittenTrouve() {
+	        return kittenTrouve;
+	    }
+
+
 	 
 
 	 

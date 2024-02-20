@@ -16,10 +16,10 @@ public class RobotFindsKitten {
         Point positionInitiale = new Point(x, y);
 
         // Instanciation d'un objet Robot en utilisant le constructeur avec la position initiale
-        Robot robot = new Robot("Le bg", positionInitiale);
+        Robot robot = new Robot("R.O.B.", positionInitiale);
 
                
-        grille.genererNonKittens();
+        grille.genererObjet();
         System.out.println("           Bienvenue dans RobotFindsKitten\nSuper Dungeon Master 3000 Ultra Turbo Edition !");
         // Affichage de la grille après avoir placé le robot
         grille.afficherGrille();
@@ -32,8 +32,7 @@ public class RobotFindsKitten {
       
         
         // Boucle principale
-        while (true) {
-        	Point positionRobot = robot.getPosition();
+        while (!grille.isKittenTrouve()) {
         	
             grille.afficherPrompt(robot);
             
@@ -41,16 +40,18 @@ public class RobotFindsKitten {
             String commande = scanner.nextLine();
 
             // Vérifier si l'utilisateur souhaite quitter le jeu
-            if (commande.equals("HAHA")) {
-                System.out.println("Jeu terminé. Au revoir !");
+            if (commande.equals("q")) {
+                System.out.println(" Au revoir !");
                 break; // Sortir de la boucle et terminer le programme
             }
-
+            
             // Déplacer le robot en fonction de la commande entrée par l'utilisateur
             grille.deplacerRobot(commande, robot);
-
-            // Afficher la grille mise à jour après le déplacement du robot
-            grille.afficherGrille();
+            
+            if (!grille.isKittenTrouve()) {
+	            // Afficher la grille mise à jour après le déplacement du robot
+	            grille.afficherGrille();
+            }
             
         }
 
