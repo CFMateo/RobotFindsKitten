@@ -1,32 +1,43 @@
+# RobotFindsKitten
+RobotFindsKitten est un jeu textuel programmé en Java où un robot explore une grille pour retrouver un objet spécifique, le kitten, dissimulé parmi d’autres symboles et pièges.
 
-Robot Finds Kitten – Simulation en Java
+## Objectif du jeu
+Le joueur contrôle un robot (#) qui se déplace sur une grille 2D. L’objectif est de trouver le symbole représentant le kitten, en évitant les obstacles et en collectant des objets utiles (clés, téléporteurs).
+Le jeu repose sur des déplacements en temps réel, une grille avec des murs, des portes, des objets aléatoires et des conditions de victoire.
 
-** Objectif du projet **
-Ce projet implémente une version console simplifiée du jeu Robot Finds Kitten. Un robot évolue dans une grille et explore méthodiquement chaque case jusqu'à localiser une cellule cible contenant le "Kitten".
+## Fonctionnalités
+Génération procédurale de la grille (avec murs, portes, espaces, objets).
+Détection des déplacements autorisés (prise en compte des murs et des portes).
+Collecte d'objets :
+  Clés (') pour ouvrir des portes (!).
+  Téléporteurs (T) pour se téléporter une fois aléatoirement.
+  Objets non-kitten (@, *, $, ...) avec descriptions affichées.
+  Kitten généré aléatoirement sur la grille : une fois trouvé, le jeu se termine.
 
-** Fonctionnement **
-La grille est modélisée comme une matrice 2D de cellules.
-Le robot commence à une position initiale (souvent en haut à gauche) et explore les cellules une à une.
-Lorsqu’il atteint la cellule contenant le "Kitten", la simulation se termine.
-
-**Logique d’exploration **
-Le robot parcourt la grille de manière systématique (ligne par ligne ou autre stratégie déterministe), sans recours à l’aléatoire. Cela permet d’avoir un comportement prévisible et testable. À chaque étape, il :
-vérifie s’il est sur la bonne case,
-marque la case comme visitée,
-décide de sa prochaine position.
-
-** Structure du projet **
-Grille.java : responsable de l’initialisation de la grille, du placement du robot et du "Kitten", ainsi que de l’affichage de l’état de la grille.
-Robot.java : contient la logique de déplacement, de vérification de la condition de victoire, et du suivi des cases visitées.
-Main.java : point d’entrée du programme. Initialise la grille et lance la boucle d’exploration.
-kitten.txt : message ou contenu affiché lorsque la cible est trouvée
-
-** Instructions de compilation et d’exécution **
-Compiler tous les fichiers Java présents dans src/ :
-  javac src/*.java
-
-Lancer le programme :
-  java -cp src Main
+## Commandes
+  w : haut
+  a : gauche
+  s : bas
+  d : droite
+  t : utiliser un téléporteur (si débloquer)
 
 
+## Architecture
+Classes principales
+Grille : contient la matrice du jeu, la logique de génération, de déplacement, d’interaction avec les objets et de victoire.
+Robot : entité contrôlée par l'utilisateur.
+NonKitten : objets leurres avec descriptions uniques.
+Point : utilitaire pour gérer les coordonnées.
+Case : gestion des symboles disponibles.
+
+# Exemple de grille (extrait console)
+
+<img width="439" height="290" alt="Screenshot 2025-07-22 065223" src="https://github.com/user-attachments/assets/3e4ea8dc-4aeb-45c3-8369-98400b2aee67" />
+
+
+
+## Exécution
+Compiler le projet (structure Java standard).
+Lancer la classe contenant le main (typiquement RobotFindsKitten).
+Le robot est placé aléatoirement. Le joueur peut alors interagir via le terminal.
 
